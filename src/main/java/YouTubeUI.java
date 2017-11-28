@@ -159,10 +159,10 @@ public class YouTubeUI extends Application {
         TextField inputVideoName = new TextField();
         TextField inputMaxResults = new TextField();
         TextField inputCountDays = new TextField();
-        advancedSearchBox.getChildren().addAll(new Text("Enter video name:"), inputVideoName,
-                new Text("Enter the maximum number of results in the issuance:"), inputMaxResults,
-                new Text("Enter the number of days after publication:"), inputCountDays,
-                advancedButton(searchingResults, inputVideoName, inputMaxResults, inputCountDays));
+        advancedSearchBox.getChildren().addAll(new Text("Enter video name:"), inputVideoName);
+        advancedSearchBox.getChildren().addAll(new Text("Enter the maximum number of results in the issuance:"), inputMaxResults);
+        advancedSearchBox.getChildren().addAll( new Text("Enter the number of days after publication:"), inputCountDays);
+        advancedSearchBox.getChildren().add(advancedButton(searchingResults, inputVideoName, inputMaxResults, inputCountDays));
         return advancedSearchBox;
     }
 
@@ -202,19 +202,19 @@ public class YouTubeUI extends Application {
     public VBox drawItem(YouTubeItem item, VBox content){
         VBox box = new VBox();
         box.setSpacing(10);
-        box.getChildren().addAll(
-                ComponentsUI.generateButton("Channel: " + item.getSnippet().getChannelTitle(),
-                        500,"#e7d4f9",
-                        () -> Platform.runLater(() -> getChannelInfo(content, item))),
-                new Text("Name video: " + item.getSnippet().getTitle()),
-                new Text("Published at: " + YouTubeDate.getStringDateFromISO8601(item.getSnippet().getPublishedAt())));
+        box.getChildren().add(ComponentsUI.generateButton("Channel: " + item.getSnippet().getChannelTitle(),
+                500,"#e7d4f9", () -> Platform.runLater(() -> getChannelInfo(content, item))));
+        box.getChildren().add(new Text("Name video: " + item.getSnippet().getTitle()));
+        box.getChildren().add(new Text("Published at: " + YouTubeDate.getStringDateFromISO8601(
+                item.getSnippet().getPublishedAt())));
 
         String url = "https://www.youtube.com/embed/" + item.getId() + "?autoplay=1";
-        box.getChildren().addAll(
-                ComponentsUI.generateImage(item.getSnippet().getThumbnails().getMedium()),
-                ComponentsUI.generateButton("View", 100, () -> playVideo(content, url)));
+        box.getChildren().add(ComponentsUI.generateImage(item.getSnippet().getThumbnails().getMedium()));
+        box.getChildren().add(ComponentsUI.generateButton("View", 100, () -> {
+                content.getChildren().clear();
+                playVideo(content, url);
+        }));
         return box;
-
     }
 
     // Воспроизведение видео
@@ -258,6 +258,7 @@ public class YouTubeUI extends Application {
 
         content.getChildren().addAll(imageView, new Text(items.get(0).getSnippet().getTitle()), textBox);
         content.getChildren().add(drawYoutubeItems(playlist,content));
+
     }
 
 }
