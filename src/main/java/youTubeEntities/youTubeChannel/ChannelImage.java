@@ -3,7 +3,7 @@ package youTubeEntities.youTubeChannel;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ThumbnailChannelImage {
+public class ChannelImage {
     private ThumbnailMedium medium;
 
     public ThumbnailMedium getMedium() {

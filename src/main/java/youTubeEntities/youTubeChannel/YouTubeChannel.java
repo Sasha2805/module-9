@@ -1,18 +1,17 @@
-package entities.youTubeChannel;
+package youTubeEntities.youTubeChannel;
 
-import java.util.ArrayList;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import youTubeEntities.YouTubeItem;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class YouTubeChannel {
-    private ArrayList<YouTubeChannelItem> items = new ArrayList<>();
+public class YouTubeChannel extends YouTubeItem {
+    private ChannelImage medium;
 
-    public ArrayList<YouTubeChannelItem> getItems() {
-        return items;
+    public ChannelImage getMedium() {
+        return medium;
     }
 
-    public void setItems(ArrayList<YouTubeChannelItem> items) {
-        this.items = items;
+    public void setMedium(ChannelImage medium) {
+        this.medium = medium;
     }
-
 }

@@ -1,4 +1,4 @@
-package entities.youTubeChannel;
+package youTubeEntities.youTubeChannel;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
