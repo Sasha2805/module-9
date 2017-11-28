@@ -1,11 +1,7 @@
-package entities;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.ObjectMapper;
 import com.mashape.unirest.http.Unirest;
-import entities.youTubeChannel.YouTubeChannel;
-import entities.youTubePlaylist.YouTubePlaylist;
 import youTubeEntities.YouTubeEntity;
 import java.io.IOException;
 
@@ -69,14 +65,14 @@ public class YouTubeClient {
         return null;
     }
 
-    public static HttpResponse<YouTubeChannel> getChannelInfo(String channelID){
+    public static HttpResponse<YouTubeEntity> getChannelInfo(String channelID){
         try {
             return Unirest.get(YOU_TUBE)
                     .routeParam("method", "channels")
                     .queryString("id", channelID)
                     .queryString("part", "snippet")
                     .queryString("key", API_KEY)
-                    .asObject(YouTubeChannel.class);
+                    .asObject(YouTubeEntity.class);
         } catch (Exception e) {
             e.printStackTrace();
         }
