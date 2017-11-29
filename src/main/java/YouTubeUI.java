@@ -102,7 +102,7 @@ public class YouTubeUI extends Application {
         });
         searchMenu.getStyleClass().add("button");
 
-        // Расширенный поиск
+        // Улучшенный поиск
         Button advancedSearch = ComponentsUI.generateButton("Advanced search", (int) menu.getMinWidth(), () -> {
                 searchingResults.getChildren().clear();
                 searchingResults.getChildren().add(advancedSearchBox(searchingResults));
@@ -245,19 +245,16 @@ public class YouTubeUI extends Application {
     }
 
     private VBox drawingChannelInfo(VBox content, YouTubeEntity channel, YouTubeEntity playlist){
-        VBox channelInfo = new VBox();
         ArrayList<YouTubeItem> items = channel.getItems();
         Image image = new Image(items.get(0).getSnippet().getThumbnails().getMedium().getUrl());
         ImageView imageView = new ImageView(image);
-        VBox textBox = new VBox();
-        textBox.setMaxWidth(content.getMinWidth());
-        textBox.getChildren().add(new Text(items.get(0).getSnippet().getDescription()));
 
+        VBox channelInfo = new VBox();
         channelInfo.setSpacing(10);
-        channelInfo.getChildren().addAll(imageView, new Text(items.get(0).getSnippet().getTitle()), textBox);
+        channelInfo.getChildren().addAll(imageView, new Text(items.get(0).getSnippet().getTitle()),
+                new Text(items.get(0).getSnippet().getDescription()));
         channelInfo.getChildren().add(drawYoutubeItems(playlist,content));
         return channelInfo;
-
     }
 
 }
