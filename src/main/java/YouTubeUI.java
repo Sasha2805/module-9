@@ -21,7 +21,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class YouTubeUI extends Application {
-    private static final int WIDTH = 800;
+    private static final int WIDTH = 900;
     private static final int HEIGHT = 600;
     private ArrayList<VBox> pages = new ArrayList<>();
     private int pageIndex;
@@ -96,23 +96,24 @@ public class YouTubeUI extends Application {
         history.getChildren().addAll(prev, next);
 
         // Поиск видео по имени
-        Button searchMenu = ComponentsUI.generateButton("Search Videos", (int) menu.getMinWidth(),
-                () -> {
+        Button searchMenu = ComponentsUI.generateButton("Search Videos", (int) menu.getMinWidth(), () -> {
                 searchingResults.getChildren().clear();
                 searchingResults.getChildren().add(searchBox(searchingResults));
         });
         searchMenu.getStyleClass().add("button");
 
         // Расширенный поиск
-        Button advancedSearch = ComponentsUI.generateButton("Advanced search", (int) menu.getMinWidth(),
-                () -> {
+        Button advancedSearch = ComponentsUI.generateButton("Advanced search", (int) menu.getMinWidth(), () -> {
                 searchingResults.getChildren().clear();
                 searchingResults.getChildren().add(advancedSearchBox(searchingResults));
         });
         searchMenu.getStyleClass().add("button");
 
-        Button clearHistory = ComponentsUI.generateButton("Clear search history", (int) menu.getMinWidth(),
-                () -> Platform.runLater(() -> pages.clear()));
+        Button clearHistory = ComponentsUI.generateButton("Clear search history", (int) menu.getMinWidth(), () -> {
+                pages.clear();
+                searchingResults.getChildren().clear();
+                searchingResults.getChildren().add(new Text("Search history is cleared"));
+        });
         clearHistory.getStyleClass().add("button");
 
         menu.getChildren().addAll(searchMenu, advancedSearch, clearHistory);
@@ -234,30 +235,28 @@ public class YouTubeUI extends Application {
             YouTubeEntity body = channel.getBody();
             HttpResponse<YouTubeEntity> response = YouTubeClient.getChannelPlaylist(item.getSnippet().getChannelId(), 10);
             YouTubeEntity playlist = response.getBody();
-            Platform.runLater(() -> drawingChannelInfo(content, body, playlist));
+            Platform.runLater(() -> {
+                content.getChildren().clear();
+                content.getChildren().add(drawingChannelInfo(content, body, playlist));
+                pages.add(drawingChannelInfo(content, body, playlist));
+            });
         });
         pool.shutdown();
     }
 
-    private void drawingChannelInfo(VBox content, YouTubeEntity channel, YouTubeEntity playlist){
-        content.getChildren().clear();
-
+    private VBox drawingChannelInfo(VBox content, YouTubeEntity channel, YouTubeEntity playlist){
+        VBox channelInfo = new VBox();
         ArrayList<YouTubeItem> items = channel.getItems();
         Image image = new Image(items.get(0).getSnippet().getThumbnails().getMedium().getUrl());
         ImageView imageView = new ImageView(image);
-
         VBox textBox = new VBox();
         textBox.setMaxWidth(content.getMinWidth());
         textBox.getChildren().add(new Text(items.get(0).getSnippet().getDescription()));
 
-        VBox channelInfo = new VBox();
         channelInfo.setSpacing(10);
-        channelInfo.getChildren().addAll(new Text(items.get(0).getSnippet().getTitle()), textBox);
+        channelInfo.getChildren().addAll(imageView, new Text(items.get(0).getSnippet().getTitle()), textBox);
         channelInfo.getChildren().add(drawYoutubeItems(playlist,content));
-        pages.add(channelInfo);
-
-        content.getChildren().addAll(imageView, new Text(items.get(0).getSnippet().getTitle()), textBox);
-        content.getChildren().add(drawYoutubeItems(playlist,content));
+        return channelInfo;
 
     }
 
