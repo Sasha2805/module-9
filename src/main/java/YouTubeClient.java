@@ -4,10 +4,10 @@ import com.mashape.unirest.http.ObjectMapper;
 import com.mashape.unirest.http.Unirest;
 import youTubeEntities.YouTubeEntity;
 import java.io.IOException;
+import java.util.Properties;
 
 public class YouTubeClient {
-    private static final String YOU_TUBE = "https://www.googleapis.com/youtube/v3/{method}";
-    private static final String API_KEY = "AIzaSyC728PQEXC4smd3BE0sRwZOh8Cu0NrWnSg";
+    private static Properties properties = YouTubeProperties.loadPPropertiesFromFile("youTube.properties");
 
     private YouTubeClient() {}
 
@@ -36,12 +36,12 @@ public class YouTubeClient {
 
     public static HttpResponse<YouTubeEntity> getSearchItems(String nameVideo, int maxResults){
         try {
-            return Unirest.get(YOU_TUBE)
+            return Unirest.get(properties.getProperty("YouTubeURL"))
                     .routeParam("method", "search")
                     .queryString("q", nameVideo)
                     .queryString("maxResults", maxResults)
                     .queryString("part", "snippet")
-                    .queryString("key", API_KEY)
+                    .queryString("key", properties.getProperty("API_KEY"))
                     .asObject(YouTubeEntity.class);
         } catch (Exception e) {
             e.printStackTrace();
@@ -51,13 +51,13 @@ public class YouTubeClient {
 
     public static HttpResponse<YouTubeEntity> getItemsByDate(String nameVideo, int maxResults, String date){
         try {
-            return Unirest.get(YOU_TUBE)
+            return Unirest.get(properties.getProperty("YouTubeURL"))
                     .routeParam("method", "search")
                     .queryString("q", nameVideo)
                     .queryString("maxResults", maxResults)
                     .queryString("part", "snippet")
                     .queryString("publishedAfter", date)
-                    .queryString("key", API_KEY)
+                    .queryString("key", properties.getProperty("API_KEY"))
                     .asObject(YouTubeEntity.class);
         } catch (Exception e) {
             e.printStackTrace();
@@ -67,11 +67,11 @@ public class YouTubeClient {
 
     public static HttpResponse<YouTubeEntity> getChannelInfo(String channelID){
         try {
-            return Unirest.get(YOU_TUBE)
+            return Unirest.get(properties.getProperty("YouTubeURL"))
                     .routeParam("method", "channels")
                     .queryString("id", channelID)
                     .queryString("part", "snippet")
-                    .queryString("key", API_KEY)
+                    .queryString("key",properties.getProperty("API_KEY"))
                     .asObject(YouTubeEntity.class);
         } catch (Exception e) {
             e.printStackTrace();
@@ -81,17 +81,16 @@ public class YouTubeClient {
 
     public static HttpResponse<YouTubeEntity> getChannelPlaylist(String channelID, int maxResults){
         try {
-            return Unirest.get(YOU_TUBE)
+            return Unirest.get(properties.getProperty("YouTubeURL"))
                     .routeParam("method", "playlists")
                     .queryString("maxResults", maxResults)
                     .queryString("channelId", channelID)
                     .queryString("part", "snippet")
-                    .queryString("key", API_KEY)
+                    .queryString("key", properties.getProperty("API_KEY"))
                     .asObject(YouTubeEntity.class);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
-
 }
